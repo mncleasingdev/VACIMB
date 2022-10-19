@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
+using System.Xml.Serialization;
 
 namespace VACIMB_Service
 {
@@ -24,7 +25,9 @@ namespace VACIMB_Service
     {
 
         [WebMethod]
-        public CIMBWebReference.paymentResponse CIMB3rdParty_PaymentRq(CIMBWebReference.PaymentRq PaymentRq)
+        [return: XmlElement("InquiryRs")]
+        //[SoapDocumentMethod(ParameterStyle = SoapParameterStyle.Bare)]
+        public CIMBWebReference.PaymentRs CIMB3rdParty_PaymentRq(CIMBWebReference.PaymentRq PaymentRq)
         {
             CIMBWebReference.paymentResponse RESPON = new CIMBWebReference.paymentResponse();
             CIMBWebReference.PaymentRs res = new CIMBWebReference.PaymentRs();
@@ -150,8 +153,8 @@ namespace VACIMB_Service
                 }
             }
 
-            RESPON.PaymentRs = res;
-            return RESPON;
+            //RESPON.PaymentRs = res;
+            return res;
         }
 
         public static void InsertLogData(string api_url, string result, int is_error, string postval, string retval, string user)

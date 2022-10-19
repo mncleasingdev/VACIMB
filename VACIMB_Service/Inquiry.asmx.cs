@@ -6,9 +6,11 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Metadata;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
+using System.Xml.Serialization;
 
 namespace VACIMB_Service
 {
@@ -30,7 +32,9 @@ namespace VACIMB_Service
         CIMBWebReference.inquiryRequest a = new CIMBWebReference.inquiryRequest();
 
         [WebMethod]
-        public CIMBWebReference.inquiryResponse CIMB3rdParty_InquiryRq(CIMBWebReference.InquiryRq InquiryRq)
+        [return: XmlElement("InquiryRs")]
+        //[SoapDocumentMethod(ParameterStyle = SoapParameterStyle.Bare)]
+        public CIMBWebReference.InquiryRs CIMB3rdParty_InquiryRq(CIMBWebReference.InquiryRq InquiryRq)
         {
             CIMBWebReference.inquiryResponse RESPON = new CIMBWebReference.inquiryResponse();
             CIMBWebReference.InquiryRs res = new CIMBWebReference.InquiryRs();
@@ -169,8 +173,8 @@ namespace VACIMB_Service
                 
             }
 
-            RESPON.InquiryRs = res;
-            return RESPON;
+            //RESPON.InquiryRs = res;
+            return res;
         }
 
         public static void InsertLogData(string api_url, string result, int is_error, string postval, string retval, string user)
