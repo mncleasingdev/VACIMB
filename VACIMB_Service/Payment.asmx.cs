@@ -23,9 +23,9 @@ namespace VACIMB_Service
     // [System.Web.Script.Services.ScriptService]
     public class Payment : System.Web.Services.WebService
     {
-
         [WebMethod]
-        [return: XmlElement("InquiryRs")]
+        [SoapDocumentMethod(ResponseElementName = "CIMB3rdParty_PaymentRs")]
+        [return: XmlElement("PaymentRs")]
         //[SoapDocumentMethod(ParameterStyle = SoapParameterStyle.Bare)]
         public CIMBWebReference.PaymentRs CIMB3rdParty_PaymentRq(CIMBWebReference.PaymentRq PaymentRq)
         {
@@ -80,19 +80,17 @@ namespace VACIMB_Service
                 isErrorParam = true;
             }
 
-            if (
-                //DateTime.TryParseExact(
-                //PaymentRq.TransactionDate,
-                //"yyyyMMddHHmmssff", //format
-                //CultureInfo.CurrentCulture,
-                //DateTimeStyles.None, out outDate) ||
-                
-                dtformat < dtFormatadd3)
-                {
-                    res.ResponseCode = "26";
-                    res.ResponseDescription = "TransactionDate format not match";
-                    isErrorParam = true;
-                }
+            if (DateTime.TryParseExact(
+                PaymentRq.TransactionDate,
+                "yyyyMMddHHmmss", //format
+                CultureInfo.CurrentCulture,
+                DateTimeStyles.None, out outDate))
+            {
+                res.ResponseCode = "26";
+                res.ResponseDescription = "TransactionDate format not match";
+                isErrorParam = true;
+            }
+
 
             if (isErrorParam == false)
             {
@@ -131,7 +129,7 @@ namespace VACIMB_Service
                     res.CustomerKey1 = PaymentRq.CustomerKey1;
                     res.CustomerKey2 = PaymentRq.CustomerKey2;
                     res.CustomerKey3 = PaymentRq.CustomerKey3;
-                    res.PaymentFlag = "100000";
+                    res.PaymentFlag = "1";
                     res.CustomerName = PaymentRq.CustomerName;
                     res.Currency = "IDR";
                     res.Amount = PaymentRq.Amount;

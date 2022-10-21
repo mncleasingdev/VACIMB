@@ -32,8 +32,8 @@ namespace VACIMB_Service
         CIMBWebReference.inquiryRequest a = new CIMBWebReference.inquiryRequest();
 
         [WebMethod]
+        [SoapDocumentMethod(ResponseElementName = "CIMB3rdParty_InquiryRs")]
         [return: XmlElement("InquiryRs")]
-        //[SoapDocumentMethod(ParameterStyle = SoapParameterStyle.Bare)]
         public CIMBWebReference.InquiryRs CIMB3rdParty_InquiryRq(CIMBWebReference.InquiryRq InquiryRq)
         {
             CIMBWebReference.inquiryResponse RESPON = new CIMBWebReference.inquiryResponse();
@@ -120,14 +120,36 @@ namespace VACIMB_Service
                                 //resp.PaidAmount = resp.Amount + resp.Fee;
                                 custName = dr["billingName"].ToString();
                                 refno = dr["referenceNo"].ToString();
-
                             }
                         }
 
                         catch (SqlException ex)
                         {
-                            //string jsonRes_Er = JsonConvert.SerializeObject(res);
-                            InsertLogData("https://external.mncleasing.com/VACIMBWebService/api/Inquiry", "", 0, "ERROR Interact with DB", InquiryRq.ToString(), "sysadmin");
+                            //var result = ex.Message.ToString().Substring(ex.Message.ToString().Length - 5);
+
+                            if (ex.Message.ToString().Substring(ex.Message.ToString().Length - 5) == "exist")
+                            {
+                                res.ResponseCode = "16";
+                                res.ResponseDescription = "Customer Not Found";
+                                isErrorParam = true;
+                            }
+
+                            else if (ex.Message.ToString().Substring(ex.Message.ToString().Length - 4) == "Paid" || (ex.Message.ToString().Substring(ex.Message.ToString().Length - 7) == "Expired"))
+                            {
+                                res.ResponseCode = "41";
+                                res.ResponseDescription = "Bill Already Paid";
+                                isErrorParam = true;
+                            }
+
+                            else
+                            {
+                                res.ResponseCode = "99";
+                                res.ResponseDescription = "General Failure";
+                                isErrorParam = true;
+                            }
+
+                            InsertLogData("https://external.mncleasing.com/VACIMBWebService/api/Inquiry", "", 0, ex.Message.ToString(), InquiryRq.ToString(), "sysadmin");
+                            return res;
                         }
 
                     res.TransactionID = InquiryRq.TransactionID;
@@ -146,14 +168,18 @@ namespace VACIMB_Service
                     bd.BillCode = "ANGSURAN";
                     bd.BillAmount = amt;
                     bd.BillReference = refno;
+                    bd.BillAmountSpecified = true;
 
                     lb.Add(bd);
                     res.BillDetailList = lb.ToArray();
 
                     res.Currency = "IDR";
                     res.Amount = amt;
+                    res.AmountSpecified = true;
                     res.Fee = 0;
+                    res.FeeSpecified = true;
                     res.PaidAmount = amt + res.Fee;
+                    res.PaidAmountSpecified = true;
                     res.CustomerName = custName;
                     res.AdditionalData1 = InquiryRq.AdditionalData1;
                     res.AdditionalData2 = InquiryRq.AdditionalData2;
@@ -162,7 +188,7 @@ namespace VACIMB_Service
                     res.FlagPayment = "1";
                     res.ResponseCode = "00";
                     res.ResponseDescription = "Transaction Success";
-
+                    
                     InsertLogData("https://external.mncleasing.com/VACIMBWebService/api/Inquiry", res.ToString(), 0, InquiryRq.ToString(), res.ResponseDescription.ToString(), "sysadmin");
                 }
 
@@ -193,6 +219,5 @@ namespace VACIMB_Service
                 conn.Close();
             }
         }
-
     }
 }

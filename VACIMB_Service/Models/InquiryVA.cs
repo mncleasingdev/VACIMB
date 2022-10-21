@@ -128,7 +128,7 @@ namespace VACIMB_Service.Models
                                 //LIST BILL DETAIL
                                 mdlBill.BillCurrency = "IDR";
                                 mdlBill.BillCode = "";
-                                mdlBill.BillAmount = Convert.ToInt32(dr["installment_amt"]);
+                                //mdlBill.BillAmount = Convert.ToInt32(dr["installment_amt"]);
                                 mdlBill.BillCode = "";
 
                                 resp.Currency = "IDR";
