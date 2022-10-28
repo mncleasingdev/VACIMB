@@ -29,6 +29,9 @@ namespace VACIMB_Service
         //[SoapDocumentMethod(ParameterStyle = SoapParameterStyle.Bare)]
         public CIMBWebReference.PaymentRs CIMB3rdParty_PaymentRq(CIMBWebReference.PaymentRq PaymentRq)
         {
+            string time16 = DateTime.Now.ToString("yyyyMMddHHmmssff",
+                                       CultureInfo.InvariantCulture);
+
             CIMBWebReference.paymentResponse RESPON = new CIMBWebReference.paymentResponse();
             CIMBWebReference.PaymentRs res = new CIMBWebReference.PaymentRs();
 
@@ -124,7 +127,7 @@ namespace VACIMB_Service
                     res.TransactionID = PaymentRq.TransactionID;
                     res.ChannelID = PaymentRq.ChannelID;
                     res.TerminalID = PaymentRq.TerminalID;
-                    res.TransactionDate = PaymentRq.TransactionDate;
+                    res.TransactionDate = time16;
                     res.CompanyCode = PaymentRq.CompanyCode;
                     res.CustomerKey1 = PaymentRq.CustomerKey1;
                     res.CustomerKey2 = PaymentRq.CustomerKey2;

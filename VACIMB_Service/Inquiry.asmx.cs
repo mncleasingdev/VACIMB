@@ -36,6 +36,9 @@ namespace VACIMB_Service
         [return: XmlElement("InquiryRs")]
         public CIMBWebReference.InquiryRs CIMB3rdParty_InquiryRq(CIMBWebReference.InquiryRq InquiryRq)
         {
+            string time16 = DateTime.Now.ToString("yyyyMMddHHmmssff",
+                                       CultureInfo.InvariantCulture);
+
             CIMBWebReference.inquiryResponse RESPON = new CIMBWebReference.inquiryResponse();
             CIMBWebReference.InquiryRs res = new CIMBWebReference.InquiryRs();
 
@@ -47,36 +50,36 @@ namespace VACIMB_Service
 
             if (InquiryRq.CompanyCode == null || InquiryRq.CompanyCode == "" || InquiryRq.CompanyCode != "4739")
             {
-                res.ResponseCode = "10";
-                res.ResponseDescription = "CompanyCode Empty";
+                //res.ResponseCode = "10";
+                //res.ResponseDescription = "CompanyCode Empty";
                 isErrorParam = true;
             }
 
             if (InquiryRq.CustomerKey1 == null || InquiryRq.CustomerKey1 == "")
             {
-                res.ResponseCode = "11";
-                res.ResponseDescription = "CustomerNumber Empty";
+                //res.ResponseCode = "11";
+                //res.ResponseDescription = "CustomerNumber Empty";
                 isErrorParam = true;
             }
 
             if (InquiryRq.TransactionID == null || InquiryRq.TransactionID == "")
             {
-                res.ResponseCode = "12";
-                res.ResponseDescription = "RequestID Empty";
+                //res.ResponseCode = "12";
+                //res.ResponseDescription = "RequestID Empty";
                 isErrorParam = true;
             }
 
             if (InquiryRq.ChannelID == null || InquiryRq.ChannelID == "")
             {
-                res.ResponseCode = "13";
-                res.ResponseDescription = "ChannelType Empty";
+                //res.ResponseCode = "13";
+                //res.ResponseDescription = "ChannelType Empty";
                 isErrorParam = true;
             }
 
             if (InquiryRq.TransactionDate == null || InquiryRq.TransactionDate == "")
             {
-                res.ResponseCode = "14";
-                res.ResponseDescription = "TransactionDate Empty";
+                //res.ResponseCode = "14";
+                //res.ResponseDescription = "TransactionDate Empty";
                 isErrorParam = true;
             }
 
@@ -86,9 +89,94 @@ namespace VACIMB_Service
                 CultureInfo.CurrentCulture,
                 DateTimeStyles.None, out outDate))
             {
-                res.ResponseCode = "15";
-                res.ResponseDescription = "TransactionDate format not match";
+                //res.ResponseCode = "15";
+                //res.ResponseDescription = "TransactionDate format not match";
                 isErrorParam = true;
+            }
+
+            if (isErrorParam == true)
+            {
+                res.TransactionID = "";
+                res.ChannelID = "";
+                res.TerminalID = "";
+                res.TransactionDate = "";
+                res.CompanyCode = "";
+                res.CustomerKey1 = "";
+                res.CustomerKey2 = "";
+                res.CustomerKey3 = "";
+
+                CIMBWebReference.BillDetail bd = new CIMBWebReference.BillDetail();
+                List<CIMBWebReference.BillDetail> lb = new List<CIMBWebReference.BillDetail>();
+
+                bd.BillCurrency = "";
+                bd.BillCode = "";
+                bd.BillAmount = 0;
+                bd.BillReference = "";
+                bd.BillAmountSpecified = true;
+
+                lb.Add(bd);
+                res.BillDetailList = lb.ToArray();
+
+                res.Currency = "";
+                res.Amount = 0;
+                res.AmountSpecified = true;
+                res.Fee = 0;
+                res.FeeSpecified = true;
+                res.PaidAmount = 0;
+                res.PaidAmountSpecified = true;
+                res.CustomerName = "";
+                res.AdditionalData1 = "";
+                res.AdditionalData2 = "";
+                res.AdditionalData3 = "";
+                res.AdditionalData4 = "";
+                res.FlagPayment = "";
+                if (InquiryRq.CompanyCode == null || InquiryRq.CompanyCode == "" || InquiryRq.CompanyCode != "4739")
+                {
+                    res.ResponseCode = "10";
+                    res.ResponseDescription = "CompanyCode Empty";
+                    //isErrorParam = true;
+                }
+
+                if (InquiryRq.CustomerKey1 == null || InquiryRq.CustomerKey1 == "")
+                {
+                    res.ResponseCode = "11";
+                    res.ResponseDescription = "CustomerNumber Empty";
+                    //isErrorParam = true;
+                }
+
+                if (InquiryRq.TransactionID == null || InquiryRq.TransactionID == "")
+                {
+                    res.ResponseCode = "12";
+                    res.ResponseDescription = "RequestID Empty";
+                    //isErrorParam = true;
+                }
+
+                if (InquiryRq.ChannelID == null || InquiryRq.ChannelID == "")
+                {
+                    res.ResponseCode = "13";
+                    res.ResponseDescription = "ChannelType Empty";
+                    //isErrorParam = true;
+                }
+
+                if (InquiryRq.TransactionDate == null || InquiryRq.TransactionDate == "")
+                {
+                    res.ResponseCode = "14";
+                    res.ResponseDescription = "TransactionDate Empty";
+                    //isErrorParam = true;
+                }
+
+                if (DateTime.TryParseExact(
+                    InquiryRq.TransactionDate,
+                    "yyyyMMddHHmmss", //format
+                    CultureInfo.CurrentCulture,
+                    DateTimeStyles.None, out outDate))
+                {
+                    res.ResponseCode = "15";
+                    res.ResponseDescription = "TransactionDate format not match";
+                    //isErrorParam = true;
+                }
+
+                //return res;
             }
 
             if (isErrorParam == false)
@@ -126,6 +214,40 @@ namespace VACIMB_Service
                         catch (SqlException ex)
                         {
                             //var result = ex.Message.ToString().Substring(ex.Message.ToString().Length - 5);
+                            res.TransactionID = "";
+                            res.ChannelID = "";
+                            res.TerminalID = "";
+                            res.TransactionDate = "";
+                            res.CompanyCode = "";
+                            res.CustomerKey1 = "";
+                            res.CustomerKey2 = "";
+                            res.CustomerKey3 = "";
+
+                            CIMBWebReference.BillDetail bd2 = new CIMBWebReference.BillDetail();
+                            List<CIMBWebReference.BillDetail> lb2 = new List<CIMBWebReference.BillDetail>();
+
+                            bd2.BillCurrency = "";
+                            bd2.BillCode = "";
+                            bd2.BillAmount = 0;
+                            bd2.BillReference = "";
+                            bd2.BillAmountSpecified = true;
+
+                            lb2.Add(bd2);
+                            res.BillDetailList = lb2.ToArray();
+
+                            res.Currency = "";
+                            res.Amount = 0;
+                            res.AmountSpecified = true;
+                            res.Fee = 0;
+                            res.FeeSpecified = true;
+                            res.PaidAmount = 0;
+                            res.PaidAmountSpecified = true;
+                            res.CustomerName = "";
+                            res.AdditionalData1 = "";
+                            res.AdditionalData2 = "";
+                            res.AdditionalData3 = "";
+                            res.AdditionalData4 = "";
+                            res.FlagPayment = "";
 
                             if (ex.Message.ToString().Substring(ex.Message.ToString().Length - 5) == "exist")
                             {
@@ -155,7 +277,7 @@ namespace VACIMB_Service
                     res.TransactionID = InquiryRq.TransactionID;
                     res.ChannelID = InquiryRq.ChannelID;
                     res.TerminalID = InquiryRq.TerminalID;
-                    res.TransactionDate = InquiryRq.TransactionID;
+                    res.TransactionDate = time16;
                     res.CompanyCode = InquiryRq.CompanyCode;
                     res.CustomerKey1 = InquiryRq.CustomerKey1;
                     res.CustomerKey2 = InquiryRq.CustomerKey2;
