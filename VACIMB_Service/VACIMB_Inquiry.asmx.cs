@@ -67,33 +67,32 @@ namespace VACIMB_Service
         [WebMethod]
         public CIMBWebReference.inquiryResponse CIMB3rdParty_InquiryRq(CIMBWebReference.inquiryRequest InquiryRq)
         {
-            //XmlDocument xdoc = new XmlDocument();
-            //using (Stream receiveStream = HttpContext.Current.Request.InputStream)
-            //{
-            //    // Move to begining of input stream and read
-            //    receiveStream.Position = 0;
-            //    using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
-            //    {
-            //        // Load into XML document
-            //        xdoc.Load(readStream);
-            //        var xmlstr = xdoc.InnerXml.ToString();
+            XmlDocument xdoc = new XmlDocument();
+            using (Stream receiveStream = HttpContext.Current.Request.InputStream)
+            {
+                // Move to begining of input stream and read
+                receiveStream.Position = 0;
+                using (StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8))
+                {
+                    // Load into XML document
+                    xdoc.Load(readStream);
+                    var xmlstr = xdoc.InnerXml.ToString();
 
-            //        //XmlSerializer serializer = new XmlSerializer(typeof(CIMBWebReference.InquiryRq));
-            //        //using (TextReader reader = new StringReader(xmlstr))
-            //        //{
-            //        //    CIMBWebReference.InquiryRq result = (CIMBWebReference.InquiryRq)serializer.Deserialize(reader);
-            //        //}
+                    //XmlSerializer serializer = new XmlSerializer(typeof(CIMBWebReference.InquiryRq));
+                    //using (TextReader reader = new StringReader(xmlstr))
+                    //{
+                    //    CIMBWebReference.InquiryRq result = (CIMBWebReference.InquiryRq)serializer.Deserialize(reader);
+                    //}
 
-            //        var settings = new XmlReaderSettings();
-            //        var obj = new CIMBWebReference.InquiryRq();
-            //        //var reader = XmlReader.Create(xdoc.InnerXml, settings);
-            //        XmlTextReader reader = new XmlTextReader(new StringReader(xmlstr));
-            //        var serializer = new System.Xml.Serialization.XmlSerializer(typeof(CIMBWebReference.InquiryRq));
-            //        obj = (CIMBWebReference.InquiryRq)serializer.Deserialize(reader);
-            //        reader.Close();
-            //        return obj;
-            //    }
-            //}
+                    var settings = new XmlReaderSettings();
+                    var obj = new CIMBWebReference.InquiryRq();
+                    //var reader = XmlReader.Create(xdoc.InnerXml, settings);
+                    XmlTextReader reader = new XmlTextReader(new StringReader(xmlstr));
+                    var serializer = new System.Xml.Serialization.XmlSerializer(typeof(CIMBWebReference.InquiryRq));
+                    obj = (CIMBWebReference.InquiryRq)serializer.Deserialize(reader);
+                    reader.Close();
+                }
+            }
 
             //res.AdditionalData1 = "a";
             //res.AdditionalData2 = "b";
