@@ -206,9 +206,10 @@ namespace VACIMB_Service
                             conn.Open();
 
                             cmd.ExecuteNonQuery();
-                            SqlDataReader reader = sqlCommand.ExecuteReader();
 
-                            resDT.Load(reader);
+                            //SqlDataReader reader = sqlCommand.ExecuteReader();
+                            //resDT.Load(reader);
+
                             conn.Close();
                         }
 

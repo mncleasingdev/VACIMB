@@ -333,7 +333,9 @@ namespace VACIMB_Service
                     res.ResponseCode = "00";
                     res.ResponseDescription = "Transaction Success";
 
-                    InsertLogData("https://external.mncleasing.com/VACIMBWebService/api/Inquiry", res.ResponseDescription.ToString(), 0, xmlreq, jsonString, "sysadmin");
+                    string jsonString1 = JsonConvert.SerializeObject(InquiryRq);
+
+                    InsertLogData("https://external.mncleasing.com/VACIMBWebService/api/Inquiry", res.ResponseDescription.ToString(), 0, xmlreq, jsonString1, "sysadmin");
                 }
 
                 catch (Exception ex)
@@ -342,7 +344,9 @@ namespace VACIMB_Service
                     res.ResponseDescription = "General Failure";
                     isErrorParam = true;
 
-                    InsertLogData("https://external.mncleasing.com/VACIMBWebService/api/Inquiry", ex.Message.ToString(), 1, xmlreq, jsonString, "sysadmin");
+                    string jsonString2 = JsonConvert.SerializeObject(InquiryRq);
+
+                    InsertLogData("https://external.mncleasing.com/VACIMBWebService/api/Inquiry", ex.Message.ToString(), 1, xmlreq, jsonString2, "sysadmin");
                 }
                 
             }
