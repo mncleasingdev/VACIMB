@@ -278,8 +278,8 @@ namespace VACIMB_Service
 
                             else if (ex.Message.ToString().Substring(ex.Message.ToString().Length - 4) == "Paid" || (ex.Message.ToString().Substring(ex.Message.ToString().Length - 7) == "Expired"))
                             {
-                                res.ResponseCode = "41";
-                                res.ResponseDescription = "Bill Already Paid";
+                                res.ResponseCode = "40";
+                                res.ResponseDescription = "bill not found";
                                 isErrorParam = true;
                             }
 
