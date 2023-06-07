@@ -115,11 +115,6 @@ namespace VACIMB_Service
                 isErrorParam = true;
             }
 
-            if (PaymentRq.ChannelID == "SBS" || PaymentRq.ChannelID == "SAT" || PaymentRq.ChannelID == "PRM")
-            {
-                isErrorParam = true;
-            }
-
             if (isErrorParam == true)
             {
                 res.TransactionID = PaymentRq.TransactionID;
@@ -191,12 +186,6 @@ namespace VACIMB_Service
                     //isErrorParam = true;
                 }
 
-                if (PaymentRq.ChannelID == "SBS" || PaymentRq.ChannelID == "SAT" || PaymentRq.ChannelID == "PRM")
-                {
-                    res.ResponseCode = "24";
-                    res.ResponseDescription = "ChannelID Empty";
-                }
-
                 return res;
             }
 
@@ -204,7 +193,7 @@ namespace VACIMB_Service
             {
                 try
                 {
-                    string ssql = "exec [dbo].[sp_PostingPayment_VA_CIMB] '"+ PaymentRq.TransactionID +"','"+ PaymentRq.CompanyCode+"' ,'" + PaymentRq.CustomerKey1 + "', '" + PaymentRq.CustomerName + "'," + PaymentRq.Amount + ",'" + postdate + "'";
+                    string ssql = "exec [dbo].[sp_PostingPayment_VA_CIMB] '"+ PaymentRq.TransactionID + "', '" + PaymentRq.ChannelID + "','" + PaymentRq.CompanyCode+"' ,'" + PaymentRq.CustomerKey1 + "', '" + PaymentRq.CustomerName + "'," + PaymentRq.Amount + ",'" + postdate + "'";
                     DataTable resDT = new DataTable();
                     string connString = ConfigurationManager.ConnectionStrings["SqlConnectionString"].ConnectionString;
                     using (SqlConnection conn = new SqlConnection(connString))
