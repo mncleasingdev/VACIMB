@@ -45,7 +45,7 @@ namespace VACIMB_Service
             string format = "yyyyMMddHHmmssff";
             string dateTime = PaymentRq.TransactionDate;
             DateTime dtformat = DateTime.ParseExact(dateTime, format, CultureInfo.InvariantCulture);
-            var postdate = dtformat.ToString("yyyy/MM/dd");
+            var postdate = DateTime.Now.ToString("yyyy/MM/dd");
             //DateTime dtformat = DateTime.ParseExact(dateTime, "YYYYMMDDhhmmss", null);
             //ini format date -3 day
             DateTime dtFormatadd3 = DateTime.Now.AddDays(-3);
@@ -112,6 +112,11 @@ namespace VACIMB_Service
             {
                 //res.ResponseCode = "26";
                 //res.ResponseDescription = "TransactionDate format not match";
+                isErrorParam = true;
+            }
+
+            if (PaymentRq.ChannelID == "SBS" || PaymentRq.ChannelID == "SAT" || PaymentRq.ChannelID == "PRM")
+            {
                 isErrorParam = true;
             }
 
@@ -186,6 +191,12 @@ namespace VACIMB_Service
                     //isErrorParam = true;
                 }
 
+                if (PaymentRq.ChannelID == "SBS" || PaymentRq.ChannelID == "SAT" || PaymentRq.ChannelID == "PRM")
+                {
+                    res.ResponseCode = "24";
+                    res.ResponseDescription = "ChannelID Empty";
+                }
+
                 return res;
             }
 
@@ -206,7 +217,6 @@ namespace VACIMB_Service
                             conn.Open();
 
                             cmd.ExecuteNonQuery();
-
                             //SqlDataReader reader = sqlCommand.ExecuteReader();
                             //resDT.Load(reader);
 
