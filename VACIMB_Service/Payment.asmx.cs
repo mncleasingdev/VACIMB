@@ -115,6 +115,11 @@ namespace VACIMB_Service
                 isErrorParam = true;
             }
 
+            if (PaymentRq.ChannelID == "SBS" || PaymentRq.ChannelID == "SAT" || PaymentRq.ChannelID == "PRM")
+            {
+                isErrorParam = true;
+            }
+
             if (isErrorParam == true)
             {
                 res.TransactionID = PaymentRq.TransactionID;
@@ -184,6 +189,12 @@ namespace VACIMB_Service
                     res.ResponseCode = "26";
                     res.ResponseDescription = "TransactionDate format not match";
                     //isErrorParam = true;
+                }
+
+                if (PaymentRq.ChannelID == "SBS" || PaymentRq.ChannelID == "SAT" || PaymentRq.ChannelID == "PRM")
+                {
+                    res.ResponseCode = "24";
+                    res.ResponseDescription = "ChannelID Empty";
                 }
 
                 return res;
